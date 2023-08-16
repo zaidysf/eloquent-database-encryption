@@ -16,8 +16,6 @@ class EloquentDatabaseEncryptionProvider extends ServiceProvider
      * This method is called after all other service providers have
      * been registered, meaning you have access to all other services
      * that have been registered by the framework.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -26,19 +24,16 @@ class EloquentDatabaseEncryptionProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
-                __DIR__ . '/../../config/eloquent-database-encryption.php' => config_path('eloquent-database-encryption.php'),
+                __DIR__.'/../../config/eloquent-database-encryption.php' => config_path('eloquent-database-encryption.php'),
             ], 'config');
 
             $this->commands([
                 EncryptModel::class,
-                DecryptModel::class
+                DecryptModel::class,
             ]);
         }
     }
 
-    /**
-     * @return void
-     */
     private function bootValidators(): void
     {
 
@@ -72,7 +67,7 @@ class EloquentDatabaseEncryptionProvider extends ServiceProvider
             $salt = substr(hash('sha256', config('eloquent-database-encryption.encrypt_key')), 0, 16);
 
             $withFilter = count($parameters) > 3;
-            if (!$withFilter) {
+            if (! $withFilter) {
                 $ignore_id = $parameters[2] ?? '';
             } else {
                 $ignore_id = $parameters[4] ?? '';
@@ -96,11 +91,9 @@ class EloquentDatabaseEncryptionProvider extends ServiceProvider
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../../config/eloquent-database-encryption.php', 'eloquent-database-encryption');
+        $this->mergeConfigFrom(__DIR__.'/../../config/eloquent-database-encryption.php', 'eloquent-database-encryption');
     }
 }

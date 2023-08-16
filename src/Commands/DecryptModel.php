@@ -25,20 +25,13 @@ class DecryptModel extends Command
      */
     protected $description = 'Decrypt model\'s rows';
 
-    /**
-     * @var array
-     */
     private array $attributes = [];
 
-    /**
-     * @var Model
-     */
     private Model $model;
 
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws Exception
      */
     public function handle(): int
@@ -52,7 +45,7 @@ class DecryptModel extends Command
         $this->model::$enableEncryption = false;
 
         if ($total > 0) {
-            $this->comment($total . ' records will be decrypted');
+            $this->comment($total.' records will be decrypted');
             $bar = $this->output->createProgressBar($total);
             $bar->setFormat('%current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
 
@@ -73,32 +66,29 @@ class DecryptModel extends Command
 
         }
 
-        $this->info($class . ' has been decrypted');
+        $this->info($class.' has been decrypted');
+
         return self::SUCCESS;
     }
 
     /**
-     * @param $class
-     * @return Model
      * @throws Exception
      */
     public function guardClass($class): Model
     {
-        if (!class_exists($class))
+        if (! class_exists($class)) {
             throw new Exception("Class {$class} does not exists");
+        }
         $model = new $class();
         $this->validateHasEncryptedColumn($model);
+
         return $model;
     }
 
-    /**
-     * @param $model
-     * @return void
-     */
     private function validateHasEncryptedColumn($model): void
     {
         $table = $model->getTable();
-        if (!Schema::hasColumn($table, 'encrypted')) {
+        if (! Schema::hasColumn($table, 'encrypted')) {
             $this->comment('Creating encrypted column');
             Schema::table($table, function (Blueprint $table) {
                 $table->tinyInteger('encrypted')->default(0);
@@ -106,10 +96,6 @@ class DecryptModel extends Command
         }
     }
 
-    /**
-     * @param $record
-     * @return array
-     */
     private function getDecryptedAttributes($record): array
     {
         $encryptedFields = ['encrypted' => 0];
@@ -118,6 +104,7 @@ class DecryptModel extends Command
             $raw = $record->{$attribute};
             $encryptedFields[$attribute] = $this->model->decryptAttribute($raw);
         }
+
         return $encryptedFields;
     }
 }

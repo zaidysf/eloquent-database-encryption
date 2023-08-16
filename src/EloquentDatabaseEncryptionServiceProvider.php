@@ -10,10 +10,6 @@ use Zaidysf\EloquentDatabaseEncryption\Commands\EncryptModel;
 
 class EloquentDatabaseEncryptionServiceProvider extends PackageServiceProvider
 {
-    /**
-     * @param Package $package
-     * @return void
-     */
     public function configurePackage(Package $package): void
     {
         /*

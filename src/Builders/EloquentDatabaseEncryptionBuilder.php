@@ -7,12 +7,6 @@ use stdClass;
 
 class EloquentDatabaseEncryptionBuilder extends Builder
 {
-    /**
-     * @param $param1
-     * @param $param2
-     * @param $param3
-     * @return mixed
-     */
     public function whereEncrypted($param1, $param2, $param3 = null): mixed
     {
         $filter = new stdClass();
@@ -25,12 +19,6 @@ class EloquentDatabaseEncryptionBuilder extends Builder
         return self::whereRaw("CONVERT(AES_DECRYPT(FROM_BASE64(`{$filter->field}`), '{$salt}') USING utf8mb4) {$filter->operation} ? ", [$filter->value]);
     }
 
-    /**
-     * @param $param1
-     * @param $param2
-     * @param $param3
-     * @return mixed
-     */
     public function orWhereEncrypted($param1, $param2, $param3 = null): mixed
     {
         $filter = new stdClass();
